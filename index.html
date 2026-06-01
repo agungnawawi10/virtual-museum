@@ -3,10 +3,11 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Virtual Museum Interaktif</title>
 
-  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/interactions.js" defer></script>
@@ -18,35 +19,46 @@
   <div id="hud">
     <div id="museum-title">
       <h1>Museum Virtual</h1>
-      <!-- <p>Koleksi Seni Dunia</p> -->
     </div>
     <div id="crosshair"></div>
     <div id="tooltip">[ Klik untuk info ]</div>
     <div id="nav-hint">WASD — Jalan &nbsp;|&nbsp; Mouse — Lihat &nbsp;|&nbsp; Klik — Interaksi</div>
 
+    <div id="mobile-controls" aria-label="Kontrol arah mobile">
+      <div id="mobile-controls-label">Gerak</div>
+      <div id="dpad">
+        <button class="dpad-btn dpad-up" data-dir="forward" aria-label="Maju">▲</button>
+        <button class="dpad-btn dpad-left" data-dir="left" aria-label="Kiri">◀</button>
+        <button class="dpad-btn dpad-right" data-dir="right" aria-label="Kanan">▶</button>
+        <button class="dpad-btn dpad-down" data-dir="backward" aria-label="Mundur">▼</button>
+      </div>
+    </div>
+
     <div id="info-panel">
       <div id="info-title">Judul Karya</div>
+      <div id="info-year">—</div>
       <div id="info-desc">Deskripsi karya seni atau artefak.</div>
-      <span id="info-close">✕ &nbsp;Tutup</span>
+      <div id="info-actions">
+        <button id="btn-ar" type="button">🔍 Lihat di AR</button>
+        <span id="info-close">✕ &nbsp;Tutup</span>
+      </div>
     </div>
   </div>
 
   <!-- ══════════════ A-FRAME SCENE ══════════════ -->
   <a-scene background="color: #1a1208" fog="type: linear; color: #1a1208; near: 10; far: 30"
-    cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .interactable">
+    cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .interactable"
+    vr-mode-ui="enabled: true" loading-screen="enabled: false">
 
     <!-- ── ASSETS ── -->
     <a-assets>
-      <img id="tex-floor" src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
-      <img id="tex-wall" src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
+      <img id="tex-floor"   src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
+      <img id="tex-wall"    src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
       <img id="tex-ceiling" src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
 
-      <img id="painting-1" src="assets/images/Vincent_van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
-        crossorigin="anonymous" />
-      <img id="painting-2" src="assets/images/Farmhouse_in_Provence,_1888,_Vincent_van_Gogh,_NGA.jpg"
-        crossorigin="anonymous" />
-      <img id="painting-3" src="assets/images/Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_(454045).jpg"
-        crossorigin="anonymous" />
+      <img id="painting-1" src="assets/images/Vincent_van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" crossorigin="anonymous" />
+      <img id="painting-2" src="assets/images/Farmhouse_in_Provence,_1888,_Vincent_van_Gogh,_NGA.jpg" crossorigin="anonymous" />
+      <img id="painting-3" src="assets/images/Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_(454045).jpg" crossorigin="anonymous" />
 
       <a-asset-item id="model-artifact1" src="assets/models/Stag Statue.glb"></a-asset-item>
       <a-asset-item id="model-artifact2" src="assets/models/Statue.glb"></a-asset-item>
@@ -59,94 +71,89 @@
     </a-entity>
 
     <!-- ══════════ RUANGAN ══════════ -->
-
-    <!-- Lantai -->
-    <a-plane src="#tex-floor" width="16" height="20" rotation="-90 0 0" position="0 0 0" repeat="4 5"
-      shadow="receive: true"></a-plane>
-
-    <!-- Langit-langit -->
-    <a-plane src="#tex-ceiling" width="16" height="20" rotation="90 0 0" position="0 4 0" repeat="4 5"></a-plane>
-
-    <!-- Dinding Belakang -->
-    <a-plane src="#tex-wall" width="16" height="4" rotation="0 0 0" position="0 2 -10" repeat="4 1"></a-plane>
-
-    <!-- Dinding Depan -->
-    <a-plane src="#tex-wall" width="16" height="4" rotation="0 180 0" position="0 2 10" repeat="4 1"></a-plane>
-
-    <!-- Dinding Kiri -->
-    <a-plane src="#tex-wall" width="20" height="4" rotation="0 90 0" position="-8 2 0" repeat="5 1"></a-plane>
-
-    <!-- Dinding Kanan -->
-    <a-plane src="#tex-wall" width="20" height="4" rotation="0 -90 0" position="8 2 0" repeat="5 1"></a-plane>
+    <a-plane src="#tex-floor"   width="16" height="20" rotation="-90 0 0" position="0 0 0"   repeat="4 5" shadow="receive: true"></a-plane>
+    <a-plane src="#tex-ceiling" width="16" height="20" rotation="90 0 0"  position="0 4 0"   repeat="4 5"></a-plane>
+    <a-plane src="#tex-wall"    width="16" height="4"  rotation="0 0 0"   position="0 2 -10" repeat="4 1"></a-plane>
+    <a-plane src="#tex-wall"    width="16" height="4"  rotation="0 180 0" position="0 2 10"  repeat="4 1"></a-plane>
+    <a-plane src="#tex-wall"    width="20" height="4"  rotation="0 90 0"  position="-8 2 0"  repeat="5 1"></a-plane>
+    <a-plane src="#tex-wall"    width="20" height="4"  rotation="0 -90 0" position="8 2 0"   repeat="5 1"></a-plane>
 
     <!-- ══════════ PENCAHAYAAN ══════════ -->
-    <a-light type="ambient" color="#4a3820" intensity="0.6"></a-light>
+    <a-light type="ambient"     color="#4a3820" intensity="0.6"></a-light>
     <a-light type="directional" color="#fff8e0" intensity="0.8" position="0 4 2" cast-shadow="true"></a-light>
-    <!-- Lampu sorot lukisan -->
     <a-light type="point" color="#ffe8a0" intensity="0.8" position="-7 3.2 -4" distance="4"></a-light>
     <a-light type="point" color="#ffe8a0" intensity="0.8" position="-7 3.2  0" distance="4"></a-light>
     <a-light type="point" color="#ffe8a0" intensity="0.8" position="-7 3.2  5" distance="4"></a-light>
     <a-light type="point" color="#ffe8a0" intensity="0.8" position=" 7 3.2 -4" distance="4"></a-light>
     <a-light type="point" color="#ffe8a0" intensity="0.8" position=" 7 3.2  4" distance="4"></a-light>
 
-    <!-- ══════════ LUKISAN DI DINDING ══════════ -->
+    <!-- ══════════ LUKISAN ══════════ -->
 
-    <!-- Dinding Kiri -->
-    <!-- Lukisan 1 -->
-    <a-entity class="interactable" position="-7.85 2.2 -4" rotation="0 90 0" data-title="Starry Night"
-      data-desc="Dilukis oleh Vincent van Gogh pada tahun 1889. Menggambarkan langit malam yang berputar-putar di atas desa Saint-Rémy-de-Provence. Salah satu karya paling ikonik dalam sejarah seni Barat.">
-      <!-- Bingkai -->
+    <!-- Lukisan 1 — Kiri -->
+    <a-entity class="interactable" position="-7.85 2.2 -4" rotation="0 90 0"
+      data-id="painting-1"
+      data-title="The Starry Night"
+      data-year="Vincent van Gogh, 1889"
+      data-desc="Menggambarkan langit malam yang berputar-putar di atas desa Saint-Rémy-de-Provence. Salah satu karya paling ikonik dalam sejarah seni Barat, dilukis saat Van Gogh dirawat di rumah sakit jiwa.">
       <a-box width="2.6" height="2.1" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
-      <!-- Kanvas -->
-      <a-plane src="#painting-1" width="2.2" height="1.7" position="0 0 0.02"
-        material="shader: flat; side: double"></a-plane>
+      <a-plane src="#painting-1" width="2.2" height="1.7" position="0 0 0.02" material="shader: flat; side: double"></a-plane>
     </a-entity>
 
-    <!-- Lukisan 2 -->
-    <a-entity class="interactable" position="-7.85 2.2 0" rotation="0 90 0" data-title="The Persistence of Memory"
-      data-desc="Karya Salvador Dalí (1931). Jam-jam yang meleleh di atas lanskap tandus menjadi simbol surealisme paling terkenal. Dalí terinspirasi dari keju Camembert yang meleleh di bawah sinar matahari.">
+    <!-- Lukisan 2 — Kiri -->
+    <a-entity class="interactable" position="-7.85 2.2 0" rotation="0 90 0"
+      data-id="painting-2"
+      data-title="Farmhouse in Provence"
+      data-year="Vincent van Gogh, 1888"
+      data-desc="Menggambarkan rumah pertanian di Provence dengan warna-warna cerah khas gaya post-impresionis Van Gogh. Dilukis selama periode produktifnya di Arles, Prancis selatan.">
       <a-box width="2.6" height="2.1" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
-      <a-plane src="#painting-2" width="2.2" height="1.7" position="0 0 0.02"
-        material="shader: flat; side: double"></a-plane>
+      <a-plane src="#painting-2" width="2.2" height="1.7" position="0 0 0.02" material="shader: flat; side: double"></a-plane>
     </a-entity>
 
-    <!-- Dinding Kanan -->
-    <!-- Lukisan 3 -->
-    <a-entity class="interactable" position="7.85 2.2 4" rotation="0 -90 0" data-title="Girl with a Pearl Earring"
-      data-desc="Dilukis oleh Johannes Vermeer sekitar tahun 1665. Sering disebut 'Mona Lisa Utara', menampilkan gadis muda dengan anting mutiara yang besar. Kini tersimpan di Mauritshuis, Den Haag, Belanda.">
+    <!-- Lukisan 3 — Kanan -->
+    <a-entity class="interactable" position="7.85 2.2 4" rotation="0 -90 0"
+      data-id="painting-3"
+      data-title="Self-Portrait"
+      data-year="Vincent van Gogh, 1889"
+      data-desc="Salah satu dari lebih dari 30 potret diri Van Gogh. Dilukis dengan sapuan kuas yang tegas dan ekspresif, menampilkan tatapan intens yang menjadi ciri khas karya-karyanya.">
       <a-box width="2.2" height="2.6" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
-      <a-plane src="#painting-3" width="1.8" height="2.2" position="0 0 0.02"
-        material="shader: flat; side: double"></a-plane>
+      <a-plane src="#painting-3" width="1.8" height="2.2" position="0 0 0.02" material="shader: flat; side: double"></a-plane>
     </a-entity>
 
     <!-- ══════════ ARTEFAK 3D ══════════ -->
 
-    <!-- Pedestal + Model 1 -->
-    <a-entity class="interactable" position="-3 0 -5" data-title="Artefak: Vas Kuno"
-      data-desc="Replika vas keramik dari dinasti Ming, abad ke-15. Dihiasi motif naga dan phoenix yang melambangkan keseimbangan kekuatan alam semesta. Teknik pembuatannya diturunkan selama ratusan tahun.">
-      <!-- Pedestal -->
+    <!-- Artefak 1 -->
+    <a-entity class="interactable" position="-3 0 -5"
+      data-id="artifact-1"
+      data-title="Stag Statue"
+      data-year="Eropa, Abad ke-17"
+      data-desc="Replika patung rusa jantan dari era barok Eropa. Simbol keagungan dan kebebasan alam liar, sering digunakan sebagai dekorasi istana dan taman kerajaan.">
       <a-box width="0.6" height="0.9" depth="0.6" color="#2c2010" position="0 0.45 0"></a-box>
       <a-box width="0.7" height="0.05" depth="0.7" color="#3a2c14" position="0 0.925 0"></a-box>
-      <!-- Model GLB -->
-      <a-gltf-model class="interactable" src="#model-artifact1" position="0 0.9 0" scale="0.3 0.3 0.3"
+      <a-gltf-model class="interactable" data-id="artifact-1" src="#model-artifact1" position="0 0.9 0" scale="0.3 0.3 0.3"
         animation="property: rotation; to: 0 360 0; dur: 8000; loop: true; easing: linear"></a-gltf-model>
     </a-entity>
 
-    <!-- Pedestal + Model 2 -->
-    <a-entity class="interactable" position="3 0 -5" data-title="Artefak: Patung Kecil"
-      data-desc="Patung perunggu yang terinspirasi dari gaya Yunani Kuno. Menceritakan sosok dewa Hermes yang dikenal sebagai pembawa pesan para dewa. Diperkirakan berasal dari abad ke-3 Sebelum Masehi.">
+    <!-- Artefak 2 -->
+    <a-entity class="interactable" position="3 0 -5"
+      data-id="artifact-2"
+      data-title="Classical Statue"
+      data-year="Yunani Kuno, Abad ke-3 SM"
+      data-desc="Patung perunggu bergaya Yunani Kuno yang menggambarkan sosok dewa. Dibuat dengan teknik lost-wax casting yang telah digunakan selama ribuan tahun oleh pengrajin Mediterania.">
       <a-box width="0.6" height="0.9" depth="0.6" color="#2c2010" position="0 0.45 0"></a-box>
       <a-box width="0.7" height="0.05" depth="0.7" color="#3a2c14" position="0 0.925 0"></a-box>
-      <a-gltf-model class="interactable" src="#model-artifact2" position="0 1.2 0" scale="0.5 0.5 0.5"
+      <a-gltf-model class="interactable" data-id="artifact-2" src="#model-artifact2" position="0 1.2 0" scale="0.5 0.5 0.5"
         animation="property: rotation; to: 0 360 0; dur: 10000; loop: true; easing: linear"></a-gltf-model>
     </a-entity>
 
-    <!-- Pedestal + Model 3 -->
-    <a-entity class="interactable" position="0 0 -8" data-title="Artefak: Tample Maya"
-      data-desc="adalah sebuah peradaban di Mesoamerika yang dibangun oleh bangsa Maya. Peradaban ini dikenal akan aksara hieroglifnya dan juga seni rupa, arsitektur, matematika, kalender, dan keahlian astronominya. Peradaban Maya berkembang di wilayah Meksiko tenggara, seluruh wilayah Guatemala dan Belize, serta bagian barat Honduras dan El Salvador..">
+    <!-- Artefak 3 -->
+    <a-entity class="interactable" position="0 0 -8"
+      data-id="artifact-3"
+      data-title="Mayan Temple"
+      data-year="Mesoamerika, 250–900 M"
+      data-desc="Replika miniatur kuil Maya dari periode klasik. Peradaban Maya dikenal dengan arsitektur monumental, sistem kalender yang presisi, dan hieroglif yang kaya. Kuil ini merupakan pusat ritual dan astronomi.">
       <a-box width="0.6" height="0.9" depth="0.6" color="#2c2010" position="0 0.45 0"></a-box>
       <a-box width="0.7" height="0.05" depth="0.7" color="#3a2c14" position="0 0.925 0"></a-box>
-      <a-gltf-model class="interactable" src="#model-artifact3" position="0 1.2 0" scale="0.5 0.5 0.5"
+      <a-gltf-model class="interactable" data-id="artifact-3" src="#model-artifact3" position="0 1.2 0" scale="0.5 0.5 0.5"
         animation="property: rotation; to: 0 360 0; dur: 10000; loop: true; easing: linear"></a-gltf-model>
     </a-entity>
 
