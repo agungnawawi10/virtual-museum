@@ -21,7 +21,7 @@ function updateArButtonTarget(id) {
 
 // ── Klik objek → info panel ──
 scene.addEventListener('click', (e) => {
-  const target = e.target.closest('[data-id]');
+  const target = e.target.closest('[data-desc]') || e.target.closest('[data-id]');
   if (!target) return;
 
   currentId = target.dataset.id || null;
