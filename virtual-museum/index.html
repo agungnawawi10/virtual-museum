@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Virtual Museum Interaktif</title>
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/interactions.js" defer></script>
+</head>
+
+<body>
+
+  <!-- ══════════════ UI OVERLAY ══════════════ -->
+  <div id="hud">
+    <div id="museum-title">
+      <h1>Museum Virtual</h1>
+    </div>
+    <div id="crosshair"></div>
+    <div id="tooltip">[ Klik untuk info ]</div>
+    <div id="nav-hint">WASD — Jalan &nbsp;|&nbsp; Mouse — Lihat &nbsp;|&nbsp; Klik — Interaksi</div>
+
+    <div id="mobile-controls" aria-label="Kontrol arah mobile">
+      <div id="mobile-controls-label">Gerak</div>
+      <div id="dpad">
+        <button class="dpad-btn dpad-up" data-dir="forward" aria-label="Maju">▲</button>
+        <button class="dpad-btn dpad-left" data-dir="left" aria-label="Kiri">◀</button>
+        <button class="dpad-btn dpad-right" data-dir="right" aria-label="Kanan">▶</button>
+        <button class="dpad-btn dpad-down" data-dir="backward" aria-label="Mundur">▼</button>
+      </div>
+    </div>
+
+    <div id="info-panel">
+      <div id="info-title">Judul Karya</div>
+      <div id="info-year">—</div>
+      <div id="info-desc">Deskripsi karya seni atau artefak.</div>
+      <div id="info-actions">
+        <button id="btn-ar" type="button">🔍 Lihat di AR</button>
+        <span id="info-close">✕ &nbsp;Tutup</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ A-FRAME SCENE ══════════════ -->
+  <a-scene background="color: #1a1208" fog="type: linear; color: #1a1208; near: 10; far: 30"
+    cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .interactable"
+    vr-mode-ui="enabled: true" loading-screen="enabled: false">
+
+    <!-- ── ASSETS ── -->
+    <a-assets>
+      <img id="tex-floor"   src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
+      <img id="tex-wall"    src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
+      <img id="tex-ceiling" src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
+
+      <img id="painting-1" src="assets/images/Vincent_van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" crossorigin="anonymous" />
+      <img id="painting-2" src="assets/images/Farmhouse_in_Provence,_1888,_Vincent_van_Gogh,_NGA.jpg" crossorigin="anonymous" />
+      <img id="painting-3" src="assets/images/Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_(454045).jpg" crossorigin="anonymous" />
+      <img id="painting-4" src="assets/images/Still_Life_with_Yellow_Straw_Hat_-_Vincent_Van_Gogh.jpg" crossorigin="anonymous" />
+      <img id="painting-5" src="assets/images/View_of_the_Hague_(Paddemoes)_-_Vincent_Van_Gogh.jpg" crossorigin="anonymous" />
+      <img id="painting-6" src="assets/images/Woman_sewing_and_cat_-_Vincent_Van_Gogh.jpg" crossorigin="anonymous" />
+
+      <a-asset-item id="model-artifact1" src="assets/models/Stag Statue.glb"></a-asset-item>
+      <a-asset-item id="model-artifact2" src="assets/models/Statue.glb"></a-asset-item>
+      <a-asset-item id="model-artifact3" src="assets/models/MayanTemple.glb"></a-asset-item>
+    </a-assets>
+
+    <!-- ── CAMERA ── -->
+    <a-entity id="rig" position="0 1.2 7" physics="mass: 1">
+      <a-camera height="1.7" near="0.1" far="40" look-controls="pointerLockEnabled: true"></a-camera>
+    </a-entity>
+
+    <!-- ══════════ RUANGAN ══════════ -->
+    <a-plane src="#tex-floor"   width="16" height="20" rotation="-90 0 0" position="0 0 0"   repeat="4 5" shadow="receive: true"></a-plane>
+    <a-plane src="#tex-ceiling" width="16" height="20" rotation="90 0 0"  position="0 4 0"   repeat="4 5"></a-plane>
+    <a-plane src="#tex-wall"    width="16" height="4"  rotation="0 0 0"   position="0 2 -10" repeat="4 1"></a-plane>
+    <a-plane src="#tex-wall"    width="16" height="4"  rotation="0 180 0" position="0 2 10"  repeat="4 1"></a-plane>
+    <a-plane src="#tex-wall"    width="20" height="4"  rotation="0 90 0"  position="-8 2 0"  repeat="5 1"></a-plane>
+    <a-plane src="#tex-wall"    width="20" height="4"  rotation="0 -90 0" position="8 2 0"   repeat="5 1"></a-plane>
+
+    <!-- ══════════ PENCAHAYAAN ══════════ -->
+    <a-light type="ambient"     color="#4a3820" intensity="0.6"></a-light>
+    <a-light type="directional" color="#fff8e0" intensity="0.8" position="0 4 2" cast-shadow="true"></a-light>
+    <a-light type="point" color="#ffe8a0" intensity="0.8" position="-7 3.2 -4" distance="4"></a-light>
+    <a-light type="point" color="#ffe8a0" intensity="0.8" position="-7 3.2  0" distance="4"></a-light>
+    <a-light type="point" color="#ffe8a0" intensity="0.8" position="-7 3.2  5" distance="4"></a-light>
+    <a-light type="point" color="#ffe8a0" intensity="0.8" position=" 7 3.2 -4" distance="4"></a-light>
+    <a-light type="point" color="#ffe8a0" intensity="0.8" position=" 7 3.2  4" distance="4"></a-light>
+
+    <!-- ══════════ LUKISAN ══════════ -->
+
+    <!-- Lukisan 1 — Kiri -->
+    <a-entity class="interactable" position="-7.85 2.2 -4" rotation="0 90 0"
+      data-id="painting-1"
+      data-title="The Starry Night"
+      data-year="Vincent van Gogh, 1889"
+      data-desc="Menggambarkan langit malam yang berputar-putar di atas desa Saint-Rémy-de-Provence. Salah satu karya paling ikonik dalam sejarah seni Barat, dilukis saat Van Gogh dirawat di rumah sakit jiwa.">
+      <a-box width="2.6" height="2.1" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
+      <a-plane src="#painting-1" width="2.2" height="1.7" position="0 0 0.02" material="shader: flat; side: double"></a-plane>
+    </a-entity>
+
+    <!-- Lukisan 2 — Kiri -->
+    <a-entity class="interactable" position="-7.85 2.2 0" rotation="0 90 0"
+      data-id="painting-2"
+      data-title="Farmhouse in Provence"
+      data-year="Vincent van Gogh, 1888"
+      data-desc="Menggambarkan rumah pertanian di Provence dengan warna-warna cerah khas gaya post-impresionis Van Gogh. Dilukis selama periode produktifnya di Arles, Prancis selatan.">
+      <a-box width="2.6" height="2.1" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
+      <a-plane src="#painting-2" width="2.2" height="1.7" position="0 0 0.02" material="shader: flat; side: double"></a-plane>
+    </a-entity>
+
+    <!-- Lukisan 3 — Kanan -->
+    <a-entity class="interactable" position="7.85 2.2 4" rotation="0 -90 0"
+      data-id="painting-3"
+      data-title="Self-Portrait"
+      data-year="Vincent van Gogh, 1889"
+      data-desc="Salah satu dari lebih dari 30 potret diri Van Gogh. Dilukis dengan sapuan kuas yang tegas dan ekspresif, menampilkan tatapan intens yang menjadi ciri khas karya-karyanya.">
+      <a-box width="2.2" height="2.6" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
+      <a-plane src="#painting-3" width="1.8" height="2.2" position="0 0 0.02" material="shader: flat; side: double"></a-plane>
+    </a-entity>
+
+    <!-- Lukisan 4 — Kanan -->
+    <a-entity class="interactable" position="7.85 2.2 -4" rotation="0 -90 0"
+      data-id="painting-4"
+      data-title="Still Life with Yellow Straw Hat"
+      data-year="Vincent van Gogh, c. 1881"
+      data-desc="Benda mati yang menonjolkan topi jerami kuning sebagai fokus utama. Warna dan tekstur yang tebal memperlihatkan eksperimen awal Van Gogh dalam menyusun cahaya dan kontras.">
+      <a-box width="2.4" height="2.0" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
+      <a-plane src="#painting-4" width="2.0" height="1.6" position="0 0 0.02" material="shader: flat; side: double"></a-plane>
+    </a-entity>
+
+    <!-- Lukisan 5 — Kanan -->
+    <a-entity class="interactable" position="7.85 2.2 0" rotation="0 -90 0"
+      data-id="painting-5"
+      data-title="View of the Hague (Paddemoes)"
+      data-year="Vincent van Gogh, c. 1882"
+      data-desc="Pemandangan kota yang menampilkan suasana Den Haag dengan pendekatan yang lebih tenang dan observasional. Karya ini menunjukkan perhatian Van Gogh pada lanskap urban dan atmosfer harian.">
+      <a-box width="2.6" height="2.1" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
+      <a-plane src="#painting-5" width="2.2" height="1.7" position="0 0 0.02" material="shader: flat; side: double"></a-plane>
+    </a-entity>
+
+    <!-- Lukisan 6 — Kanan -->
+    <a-entity class="interactable" position="7.85 2.2 8" rotation="0 -90 0"
+      data-id="painting-6"
+      data-title="Woman Sewing and Cat"
+      data-year="Vincent van Gogh, c. 1881"
+      data-desc="Adegan domestik yang sederhana namun hangat, menggambarkan aktivitas menjahit di samping seekor kucing. Karya ini menangkap sisi keseharian yang intim dalam masa awal Van Gogh.">
+      <a-box width="2.4" height="2.0" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
+      <a-plane src="#painting-6" width="2.0" height="1.6" position="0 0 0.02" material="shader: flat; side: double"></a-plane>
+    </a-entity>
+
+    <!-- ══════════ ARTEFAK 3D ══════════ -->
+
+    <!-- Artefak 1 -->
+    <a-entity class="interactable" position="-3 0 -5"
+      data-id="artifact-1"
+      data-title="Stag Statue"
+      data-year="Eropa, Abad ke-17"
+      data-desc="Replika patung rusa jantan dari era barok Eropa. Simbol keagungan dan kebebasan alam liar, sering digunakan sebagai dekorasi istana dan taman kerajaan.">
+      <a-box width="0.6" height="0.9" depth="0.6" color="#2c2010" position="0 0.45 0"></a-box>
+      <a-box width="0.7" height="0.05" depth="0.7" color="#3a2c14" position="0 0.925 0"></a-box>
+      <a-gltf-model class="interactable" data-id="artifact-1" src="#model-artifact1" position="0 0.9 0" scale="0.3 0.3 0.3"
+        animation="property: rotation; to: 0 360 0; dur: 8000; loop: true; easing: linear"></a-gltf-model>
+    </a-entity>
+
+    <!-- Artefak 2 -->
+    <a-entity class="interactable" position="3 0 -5"
+      data-id="artifact-2"
+      data-title="Classical Statue"
+      data-year="Yunani Kuno, Abad ke-3 SM"
+      data-desc="Patung perunggu bergaya Yunani Kuno yang menggambarkan sosok dewa. Dibuat dengan teknik lost-wax casting yang telah digunakan selama ribuan tahun oleh pengrajin Mediterania.">
+      <a-box width="0.6" height="0.9" depth="0.6" color="#2c2010" position="0 0.45 0"></a-box>
+      <a-box width="0.7" height="0.05" depth="0.7" color="#3a2c14" position="0 0.925 0"></a-box>
+      <a-gltf-model class="interactable" data-id="artifact-2" src="#model-artifact2" position="0 1.2 0" scale="0.5 0.5 0.5"
+        animation="property: rotation; to: 0 360 0; dur: 10000; loop: true; easing: linear"></a-gltf-model>
+    </a-entity>
+
+    <!-- Artefak 3 -->
+    <a-entity class="interactable" position="0 0 -8"
+      data-id="artifact-3"
+      data-title="Mayan Temple"
+      data-year="Mesoamerika, 250–900 M"
+      data-desc="Replika miniatur kuil Maya dari periode klasik. Peradaban Maya dikenal dengan arsitektur monumental, sistem kalender yang presisi, dan hieroglif yang kaya. Kuil ini merupakan pusat ritual dan astronomi.">
+      <a-box width="0.6" height="0.9" depth="0.6" color="#2c2010" position="0 0.45 0"></a-box>
+      <a-box width="0.7" height="0.05" depth="0.7" color="#3a2c14" position="0 0.925 0"></a-box>
+      <a-gltf-model class="interactable" data-id="artifact-3" src="#model-artifact3" position="0 1.2 0" scale="0.5 0.5 0.5"
+        animation="property: rotation; to: 0 360 0; dur: 10000; loop: true; easing: linear"></a-gltf-model>
+    </a-entity>
+
+    <!-- Bangku museum (dekoratif) -->
+    <a-box width="1.8" height="0.08" depth="0.5" color="#5a3e1e" position="0 0.5 0"></a-box>
+    <a-box width="0.08" height="0.5" depth="0.5" color="#4a3010" position="-0.86 0.25 0"></a-box>
+    <a-box width="0.08" height="0.5" depth="0.5" color="#4a3010" position=" 0.86 0.25 0"></a-box>
+
+  </a-scene>
+</body>
+
+</html>
