@@ -52,7 +52,8 @@
 
     <!-- ── ASSETS ── -->
     <a-assets>
-      <img id="tex-floor" src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
+      <img id="tex-floor" src="assets/images/Poliigon_ConcretePaversSquare_7100_Roughness.jpg"
+        crossorigin="anonymous" />
       <img id="tex-wall" src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
       <img id="tex-ceiling" src="assets/images/Marble016_4K-JPG_Color.jpg" crossorigin="anonymous" />
 
@@ -78,10 +79,35 @@
       <a-camera height="1.7" near="0.1" far="40" look-controls="pointerLockEnabled: true"></a-camera>
     </a-entity>
 
+    <!-- TEMBOK DEPAN -->
+    <a-text value="VIRTUAL MUSEUM" color="#E8C97A" align="center" width="8" position="0 2.9 -9.9">
+    </a-text>
+
+    <a-text value="Interactive Learning Media" color="#FFFFFF" align="center" width="6" position="0 2.45 -9.9">
+    </a-text>
+
+    <a-text value="Explore • Learn • Experience" color="#BBBBBB" align="center" width="5" position="0 1.95 -9.9">
+    </a-text>
+
+    <!-- TEMBOK BELAKANG -->
+    <a-box width="6" height="2.8" depth="0.08" color="#8E8E87" position="0 2.3 9.95">
+    </a-box>
+
+    <a-text value="THANK YOU" color="#E8C97A" align="center" width="6" rotation="0 180 0" position="0 2.9 9.9">
+    </a-text>
+
+    <a-text value="FOR VISITING" color="#FFFFFF" align="center" width="6" rotation="0 180 0" position="0 2.5 9.9">
+    </a-text>
+
+    <a-text value="Virtual Museum" color="#BBBBBB" align="center" width="5" rotation="0 180 0" position="0 2.0 9.9">
+    </a-text>
     <!-- ══════════ RUANGAN ══════════ -->
     <a-plane src="#tex-floor" width="16" height="20" rotation="-90 0 0" position="0 0 0" repeat="4 5"
-      shadow="receive: true"></a-plane>
-    <a-plane src="#tex-ceiling" width="16" height="20" rotation="90 0 0" position="0 4 0" repeat="4 5"></a-plane>
+      shadow="receive: true">
+    </a-plane>
+    <!-- <a-plane src="#tex-ceiling" width="16" height="20" rotation="90 0 0" position="0 4 0" repeat="4 5"></a-plane> -->
+    <a-plane color="#f5f5f5" width="16" height="16" rotation="90 0 0" position="0 5 0">
+    </a-plane>
     <a-plane src="#tex-wall" width="16" height="4" rotation="0 0 0" position="0 2 -10" repeat="4 1"></a-plane>
     <a-plane src="#tex-wall" width="16" height="4" rotation="0 180 0" position="0 2 10" repeat="4 1"></a-plane>
     <a-plane src="#tex-wall" width="20" height="4" rotation="0 90 0" position="-8 2 0" repeat="5 1"></a-plane>
@@ -92,6 +118,7 @@
     <a-light type="directional" color="#fff8e0" intensity="0.8" position="0 4 2" cast-shadow="true"></a-light>
     <a-light type="point" color="#ffe8a0" intensity="0.8" position="-7 3.2 -4" distance="4"></a-light>
     <a-light type="point" color="#ffe8a0" intensity="0.8" position="-7 3.2  0" distance="4"></a-light>
+    <a-light type="point" color="#ffe8a0" intensity="0.8" position=" 7 3.2  0" distance="4"></a-light>
     <a-light type="point" color="#ffe8a0" intensity="0.8" position="-7 3.2  5" distance="4"></a-light>
     <a-light type="point" color="#ffe8a0" intensity="0.8" position=" 7 3.2 -4" distance="4"></a-light>
     <a-light type="point" color="#ffe8a0" intensity="0.8" position=" 7 3.2  4" distance="4"></a-light>
@@ -144,14 +171,18 @@
     </a-entity>
 
     <!-- Lukisan 6 — Kanan -->
-    <a-entity class="interactable" position="7.6 2.2 8" rotation="0 -90 0" data-id="painting-6"
+    <a-entity class="interactable" position="-7.6 2.2 4" rotation="0 90 0" data-id="painting-6"
       data-title="Woman Sewing and Cat" data-year="Vincent van Gogh, c. 1881"
       data-desc="Adegan domestik yang sederhana namun hangat, menggambarkan aktivitas menjahit di samping seekor kucing. Karya ini menangkap sisi keseharian yang intim dalam masa awal Van Gogh.">
-      <a-box width="2.4" height="2.0" depth="0.06" color="#3d2b0e" position="0 0 -0.03"></a-box>
-      <a-plane class="interactable" src="#painting-6" width="2.0" height="1.6" position="0 0 0.02"
-        material="shader: flat; side: double"></a-plane>
-    </a-entity>
 
+      <a-box width="2.4" height="2.0" depth="0.06" color="#3d2b0e" position="0 0 -0.03">
+      </a-box>
+
+      <a-plane class="interactable" src="#painting-6" width="2.0" height="1.6" position="0 0 0.02"
+        material="shader: flat; side: double">
+      </a-plane>
+
+    </a-entity>
     <!-- ══════════ ARTEFAK 3D ══════════ -->
 
     <!-- Artefak 1 -->
