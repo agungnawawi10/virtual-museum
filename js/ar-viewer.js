@@ -73,9 +73,9 @@ marker.addEventListener('markerFound', () => {
   statusText.textContent = 'Marker terdeteksi ✓';
   markerGuide.classList.add('hidden');
   
-  // Cari model untuk gesture control
+  // Gunakan root entity agar seluruh komponen ikut rotate/scale
   if (activeEl) {
-    activeModel = activeEl.querySelector('a-gltf-model, a-plane');
+    activeModel = activeEl;
     if (activeModel && !activeModel.getAttribute('scale')) {
       activeModel.setAttribute('scale', '1 1 1');
     }
